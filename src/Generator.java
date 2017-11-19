@@ -9,6 +9,7 @@ import java.util.Random;
 public class Generator {
 	
 	public static void main(String[] args) throws FileNotFoundException  {
+		try {
 		int lengthGenerate = Integer.parseInt(args[0]);
 		String languageGenerate = args[1];
 		double dataMisstakes = Double.parseDouble(args[2]);
@@ -19,7 +20,14 @@ public class Generator {
 		else if (checkLocale(languageGenerate, "be_BY"))
 			genName(lengthGenerate, new Locale("be", "BY"), dataMisstakes);
 		else 
-			languageGenerate = "---";
+			throw new Exception();
+		}
+		catch(Exception d){
+			System.out.println("Incorrect parameters. The following parameters are required for operation:");
+			System.out.println("- Number of records (Integer)");
+			System.out.println("- Destination language, 'en_US', 'be_BY', 'en_US' available");
+			System.out.println("- Number of errors per record (Double)");
+		}
 	}
 	
 	public static void genName(int amount, Locale loc, double mistakes) throws FileNotFoundException {
@@ -31,6 +39,9 @@ public class Generator {
 		ArrayList<String> namesF = gen.getNames(loc,false);
 		ArrayList<String> lastnamesF = gen.getLastNames(loc,false);
 		ArrayList<String> midlenamesF = gen.getMidleNames(loc,false);
+		ArrayList<String> cities = gen.getCities(loc);
+		ArrayList<String> streets = gen.getStreet(loc);
+		ArrayList<String> streetprefixs = gen.getStreetPrefix(loc);
 		StringBuilder sb = new StringBuilder();
 		String temp,temp1;
 		for (int i = 0; i < amount; i++) {
@@ -47,6 +58,14 @@ public class Generator {
 					sb.append(namesF.get(rand.nextInt(namesF.size())) + " ");
 					sb.append(midlenamesF.get(rand.nextInt(midlenamesF.size()))+ ", ");
 				}
+				
+				sb.append("г. "+cities.get(rand.nextInt(cities.size())) + "/, ");
+				sb.append(streetprefixs.get(rand.nextInt(streetprefixs.size())) + " ");
+				sb.append(streets.get(rand.nextInt(streets.size())) + " ");
+				sb.append(rand.nextInt(200) + "/, ");
+				
+				sb.append("кв. ");
+				sb.append(rand.nextInt(100) + ", ");
 			}
 			else
 			{
@@ -66,8 +85,20 @@ public class Generator {
 					sb.append(lastnamesF.get(rand.nextInt(lastnamesF.size())) + " ");
 					sb.append(namesF.get(rand.nextInt(namesF.size())) + ", ");
 				}
+				
+				sb.append(cities.get(rand.nextInt(cities.size())) + "/, ");
+				sb.append(streetprefixs.get(rand.nextInt(streetprefixs.size())) + " ");
+				sb.append(streets.get(rand.nextInt(streets.size())) + " ");
+				sb.append(rand.nextInt(200) + "/, ");
+				
+				if (rand.nextBoolean())
+				{
+					sb.append("apt. ");
+				}
+				else
+					sb.append("suite ");
+				sb.append(rand.nextInt(150) + ", ");
 			}
-			
 			
 			sb.append(getPhoneNumber(loc));
 			
